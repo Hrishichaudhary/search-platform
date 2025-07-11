@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🚀 Search Platform
+=======
+## 🚀 Search Platform
+>>>>>>> 6edfb3e740b39262287587d31a4bdb038901e420
 
 ## 📝 Project Overview
 
@@ -167,4 +171,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 **Email:** Hrishikesh.kr.chaudhary16@gmail.com  
 For questions or contributions, please open an [issue](https://github.com/Hrishichaudhary/search-platform/issues) or pull request on this repository.
 
+<<<<<<< HEAD
 **Good luck, and happy searching! 🚀**
+=======
+8. Running Locally
+
+Clone the repository and organize as above.
+Follow the Setup instructions for backend and frontend.
+
+9. Contact:
+
+mail: Hrishikesh.kr.chaudhary16@gmail.com
+
+For questions or contributions, please open an issue or pull request on this repository.
+
+Good luck, and happy searching!
+>>>>>>> 6edfb3e740b39262287587d31a4bdb038901e420
