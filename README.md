@@ -1,26 +1,26 @@
-Search Platform :
-A semantic search engine for patents and academic papers, featuring sub-topic clustering and trend visualization. Designed for researchers and engineers to efficiently explore prior art and discover relevant solutions.
+🚀 Search Platform
 
-Project Overview :
+📝 Project Overview
+
+A semantic search engine for patents and academic papers, featuring sub-topic clustering and trend visualization. Designed for researchers and engineers to efficiently explore prior art and discover relevant solutions.
 
 This platform enables users to:
 
-Search patents and papers using natural language queries.
+🔍 Search patents and papers using natural language queries.
 
-Filter by document type, publication date, and field of research.
+🏷️ Filter by document type, publication date, and field of research.
 
-Cluster results into sub-topics using vector embeddings.
+🧠 Cluster results into sub-topics using vector embeddings.
 
-Visualize trends in research and innovation via an interactive heatmap.
+📈 Visualize trends in research and innovation via an interactive heatmap.
 
-Stack:
-
+Stack
 Backend: FastAPI, Milvus (vector database), Sentence Transformers (all-MiniLM-L6-v2)
 
-Frontend: Vue.js (Vite), Tailwind CSS
+Frontend: Nuxt.js (Vue 3), Tailwind CSS, Chart.js
 
-Project Structure
-text
+📁 Project Structure
+
 search-platform/
 ├── backend/
 │   ├── app/
@@ -43,9 +43,24 @@ search-platform/
 │   │   │   └── patents.csv
 │   ├── venv/
 │   ├── requirements.txt
-├── structure.txt
+│   ├── docker-compose.yml
+├── frontend/
+│   ├── assets/
+│   ├── components/
+│   ├── content/
+│   ├── pages/
+│   ├── nuxt.config.ts
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── docs/
+│   │   └── screenshots/
+│   │       ├── search.png
+│   │       ├── results.png
+│   │       └── heatmap.png
+├── README.md
 
-Features
+✨ Features
+
 🔍 Semantic search for patents and papers.
 
 🏷️ Filter by type, date range, and field of research.
@@ -58,9 +73,10 @@ Features
 
 🛡️ Robust handling of missing data.
 
-Setup
+⚙️ Setup
+
 1. Backend
-bash
+
 # Create and activate a virtual environment
 cd backend
 python -m venv venv
@@ -72,7 +88,7 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Start Milvus (requires Docker)
+# Start Milvus and Minio (requires Docker)
 docker-compose up -d
 
 # Ingest data
@@ -81,63 +97,69 @@ python data_ingestion.py
 
 # Run the FastAPI server
 uvicorn main:app --reload
-2. Frontend
-Note: If your frontend is in a separate folder/repo, update this section accordingly.
 
-bash
+2. Frontend
+
 cd frontend
 npm install
 npm run dev
 Open http://localhost:3000 in your browser.
 
-Deployment
-Frontend: Deploy to Vercel or Netlify
 
-Backend: Deploy FastAPI on Render, Railway, or your own server.
+3. Deployment
+
+Frontend: https://search-platform-five.vercel.app/ (deployed on Vercel)
+
+Backend: Run FastAPI locally or deploy on Render, Railway, or your own server.
 
 Milvus: Ensure Milvus is accessible from your backend.
 
-Sample Queries
+4. Sample Queries
 Query	Doc Type	Expected Output
 machine learning	Papers	AI/ML research papers
 Injection molding machine	Patents	Relevant manufacturing patents
 film	Both	Patents and papers on films
-Screenshots
-Search Page:
 
-Results Page:
 
-Approach
+5. Approach
+
 Data ingestion: Merges and standardizes CSVs for patents and papers, using title + abstract for robust semantic search.
 
 Vector search: Milvus enables fast, scalable similarity search.
 
 Clustering: KMeans groups results into meaningful sub-topics.
 
-Frontend: Vue.js provides a responsive, filterable UI with trend visualization.
+Frontend: Nuxt.js provides a responsive, filterable UI with trend visualization.
 
-Assumptions, Challenges, and Trade-offs
+6. Assumptions, Challenges, and Trade-offs
+
 Assumptions: Patent abstracts may be sparse; citation data is often missing for patents.
 
-Challenges: Ensuring semantic search works with empty patent abstracts (solved by embedding both title and abstract).
+Challenges: Ensuring semantic search works with empty patent abstracts (solved by embedding both title and abstract); troubleshooting deployment and mobile search issues.
 
-Trade-offs: Citation filtering is only meaningful for papers; it is disabled for patents to avoid user confusion.
+Trade-offs: Citation filtering is only meaningful for papers; it is disabled for patents to avoid user confusion. Prioritized rapid deployment and robust desktop experience; mobile search may be inconsistent due to known Nuxt Content issues.l results.
 
-User Experience: Designed for clarity and speed, with clear feedback when filters exclude all results.
+7. Known Issues
+Mobile Search: Search works reliably on desktop, but may not return results on some mobile browsers due to a known Nuxt Content bug. See Nuxt Content issues.
+
+Backend Deployment: Only the frontend is deployed; backend must be run locally for full functionality.
 
 Notes
 Uses open-source embedding model: all-MiniLM-L6-v2.
 
-Can be extended with other models (e.g., OpenAI text-embedding-ada-002) if desired.
+Can be extended with other models (e.g., OpenAI text-embedding-ada-002).
 
 Designed for maintainability and real-world research utility.
 
-Running Locally
+8. Running Locally
+
 Clone the repository and organize as above.
+Follow the Setup instructions for backend and frontend.
 
-Follow the Setup instructions.
+9. Contact:
 
-Contact
+mail: Hrishikesh.kr.chaudhary16@gmail.com
+
 For questions or contributions, please open an issue or pull request on this repository.
 
 Good luck, and happy searching!
