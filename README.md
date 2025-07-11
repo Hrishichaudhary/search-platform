@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # 🚀 Search Platform
-=======
-## 🚀 Search Platform
->>>>>>> 6edfb3e740b39262287587d31a4bdb038901e420
 
 ## 📝 Project Overview
 
@@ -80,37 +76,37 @@ search-platform/
 
 ### 1. Backend
 
-Create and activate a virtual environment
-cd backend
-python -m venv venv
+#### Create and activate a virtual environment
+    cd backend
+    python -m venv venv
 
-On Windows:
-venv\Scripts\activate
+#### On Windows
+    venv\Scripts\activate
 
-On Mac/Linux:
-source venv/bin/activate
+#### On Mac/Linux
+    source venv/bin/activate
 
-Install dependencies
-pip install -r requirements.txt
+##### Install dependencies
+    pip install -r requirements.txt
 
-Start Milvus and Minio (requires Docker)
-docker-compose up -d
+#### Start Milvus and Minio (requires Docker)
+    docker-compose up -d
 
-Ingest data
-cd app
-python data_ingestion.py
+# * Ingest data
+    cd app
+    python data_ingestion.py
 
-Run the FastAPI server
-uvicorn main:app --reload
+# * Run the FastAPI server
+    uvicorn main:app --reload
 
 
 ### 2. Frontend
 
-cd frontend
-npm install
-npm run dev
+    cd frontend
+    npm install
+    npm run dev
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+  * Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🚀 Deployment
 
@@ -152,38 +148,24 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🏃 Running Locally
 
-1. Clone the repository and organize as above.
-2. Follow the **Setup** instructions for backend and frontend.
-
-## 🖼️ Screenshots
-
-### Search Page
-<!-- ![Search Page](frontend/docs/screenshots/search.png) -->
-
-### Results Page
-<!-- ![Results Page](frontend/docs/screenshots/results.png) -->
-
-### Heatmap Visualization
-<!-- ![Heatmap Visualization](frontend/docs/screenshots/heatmap.png) -->
-
-*Uncomment and add images above after adding screenshots to your repo.*
+* Clone the repository and organize as above.
+* Follow the **Setup** instructions for backend and frontend.
 
 **Email:** Hrishikesh.kr.chaudhary16@gmail.com  
 For questions or contributions, please open an [issue](https://github.com/Hrishichaudhary/search-platform/issues) or pull request on this repository.
 
-<<<<<<< HEAD
+
 **Good luck, and happy searching! 🚀**
-=======
-8. Running Locally
 
-Clone the repository and organize as above.
-Follow the Setup instructions for backend and frontend.
+* Running Locally
 
-9. Contact:
+* Clone the repository and organize as above.
+* Follow the Setup instructions for backend and frontend.
 
-mail: Hrishikesh.kr.chaudhary16@gmail.com
+* Contact:
 
-For questions or contributions, please open an issue or pull request on this repository.
+* mail: Hrishikesh.kr.chaudhary16@gmail.com
+
+* For questions or contributions, please open an issue or pull request on this repository.
 
 Good luck, and happy searching!
->>>>>>> 6edfb3e740b39262287587d31a4bdb038901e420
