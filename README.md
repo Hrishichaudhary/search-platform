@@ -2,7 +2,8 @@
 
 ## 📝 Project Overview
 
-A **semantic search engine** for patents and academic papers, featuring sub-topic clustering and trend visualization. Designed for researchers and engineers to efficiently explore prior art and discover relevant solutions.
+Search Platform is an advanced semantic search engine designed for exploring patents and academic papers. It empowers researchers, engineers, and innovators to efficiently discover relevant prior art and emerging trends in their fields.
+The platform combines natural language search, intelligent clustering, and interactive trend visualization to make the exploration of large technical corpora intuitive and insightful.
 
 ### Core Capabilities
 
@@ -63,14 +64,14 @@ search-platform/
 ```
 
 
-## ✨ Features
+## ✨ Key Features:
 
-- 🔍 **Semantic search** for patents and papers
-- 🏷️ **Filter** by type, date range, and field of research
-- 🧠 **Clustering** results into sub-topics
-- 📈 **Trend heatmap** visualization
+- 🔍 **Semantic search** using state-of-the-art language models
+- 🏷️ **Filter** by Kryword-type, date range, and No. of citations
+- 🧠 **Clustering** of results into sub-topics for deeper exploration
+- 📈 **Trend heatmap** visualizations of research and innovation trends
 - ⚡ **Fast, scalable vector search** with Milvus
-- 🛡️ **Robust handling** of missing data
+- 🛡️ **Robust handling** of missing or sparse data
 
 ## ⚙️ Setup
 
@@ -92,11 +93,11 @@ search-platform/
 #### Start Milvus and Minio (requires Docker)
     docker-compose up -d
 
-# * Ingest data
+#### Ingest data
     cd app
     python data_ingestion.py
 
-# * Run the FastAPI server
+#### Run the FastAPI server
     uvicorn main:app --reload
 
 
@@ -112,7 +113,7 @@ search-platform/
 
 - **Frontend:** [https://search-platform-five.vercel.app/](https://search-platform-five.vercel.app/) (Vercel)
 - **Backend:** Run FastAPI locally or deploy on Render, Railway, or your own server
-- **Milvus:** Ensure Milvus is accessible from your backend
+- **Milvus:** Ensure Milvus is accessible from your backend 
 
 ## 🔎 Sample Queries
 
@@ -137,8 +138,16 @@ search-platform/
 
 ## 🐞 Known Issues
 
-- **Mobile Search:** Search works reliably on desktop, but may not return results on some mobile browsers due to a known Nuxt Content bug. See [Nuxt Content issues](https://github.com/nuxt/content/issues).
-- **Backend Deployment:** Only the frontend is deployed; backend must be run locally for full functionality.
+- **Mobile Search:** Search works reliably on desktop browsers, but may not return results on some mobile browsers due to a known Nuxt Content bug. For more information and updates, see [Nuxt Content issues](https://github.com/nuxt/content/issues).
+
+- **Backend Deployment & Access:** Only the frontend is deployed publicly; the backend (FastAPI + Milvus) currently runs locally.  
+  To access the backend and enable full search functionality, users need to set up and run the backend on their own machine or deploy it to a public server. This involves:
+  - Cloning the repository
+  - Installing backend dependencies
+  - Starting the backend server (see Setup instructions in the README)
+  - Optionally, updating the frontend configuration to point to the correct backend URL
+
+  Without this setup, the deployed frontend will not be able to fetch or display search results for external users.
 
 ## 📚 Notes
 
@@ -151,21 +160,11 @@ search-platform/
 * Clone the repository and organize as above.
 * Follow the **Setup** instructions for backend and frontend.
 
-**Email:** Hrishikesh.kr.chaudhary16@gmail.com  
-For questions or contributions, please open an [issue](https://github.com/Hrishichaudhary/search-platform/issues) or pull request on this repository.
+# Contact:
+
+**Email:** Hrishikesh.kr.chaudhary16@gmail.com
+
+* For questions or contributions, please open an [issue](https://github.com/Hrishichaudhary/search-platform/issues) or pull request on this repository.
 
 
 **Good luck, and happy searching! 🚀**
-
-* Running Locally
-
-* Clone the repository and organize as above.
-* Follow the Setup instructions for backend and frontend.
-
-* Contact:
-
-* mail: Hrishikesh.kr.chaudhary16@gmail.com
-
-* For questions or contributions, please open an issue or pull request on this repository.
-
-Good luck, and happy searching!
