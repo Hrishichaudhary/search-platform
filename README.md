@@ -144,7 +144,7 @@ search-platform/
   To access the backend and enable full search functionality, users need to set up and run the backend on their own machine or deploy it to a public server. This involves:
   - Cloning the repository
   - Installing backend dependencies
-  - Starting the backend server (see Setup instructions in the README)
+  - Starting the backend server
   - Optionally, updating the frontend configuration to point to the correct backend URL
 
   Without this setup, the deployed frontend will not be able to fetch or display search results for external users.
