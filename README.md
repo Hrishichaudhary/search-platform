@@ -1,4 +1,4 @@
-🚀 Search Platform
+## 🚀 Search Platform
 
 📝 Project Overview
 
