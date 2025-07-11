@@ -1,0 +1,40 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Backend volumes and data (Milvus, MinIO, etc.)
+backend/volumes/
+backend/data/raw/
+*.csv
+*.tsv
+*.zip
+
+# Python cache and venv
+__pycache__/
+*.pyc
+backend/venv/
+
+# Node modules and build output (if you have a frontend folder)
+frontend/node_modules/
+frontend/dist/
