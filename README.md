@@ -2,7 +2,7 @@
 
 ## 📝 Project Overview
 
-* The Search Platform is a robust, modern search engine designed to index and retrieve patents and academic papers using advanced vector search technology.
+* The Search Platform is a robust, modern search engine designed to index and retrieve patents and research papers using advanced vector search technology.
 
 ### The system features:
 
