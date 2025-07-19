@@ -5,10 +5,12 @@
     <!-- Search Bar and Filters -->
     <div class="mb-6 bg-gray-100 p-4 rounded-lg shadow">
       <form class="flex flex-col gap-4 md:flex-row md:items-end" @submit.prevent="search">
+        <label for="search-keyword" class="sr-only">Search keywords</label>
         <input
+          id="search-keyword"
           v-model="query.text"
           type="text"
-          placeholder="Type a keyword"
+          placeholder="Type a keyword....eg. machine learning"
           class="border p-3 rounded w-full focus:outline-blue-400"
         >
         <select v-model="query.doc_type" class="border p-3 rounded w-full md:w-44">
@@ -41,20 +43,23 @@
           class="bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition w-full md:w-32"
         >Search</button>
       </form>
+
+      <!-- NEW: Citation warning for patents -->
+      <div v-if="results.citation_warning" class="text-xs text-red-600 mt-2 ml-2">
+        {{ results.citation_warning }}
+      </div>
     </div>
 
-    <!-- Gray Bee branding section (only when blank, not searching, no error) -->
+    <!-- Gray Bee branding section... (rest unchanged) -->
     <div
       v-if="(!Array.isArray(results.documents) || !results.documents.length) && !loading && !results.error"
       class="flex flex-col items-center justify-center py-14 text-gray-500"
     >
-      <!-- Big Bee above last 'e', resized proportionally -->
       <h2 class="text-5xl font-extrabold mb-2 tracking-tight flex justify-center items-end" style="color:#7b7b7c">
         Gray Be
         <span class="inline-block relative w-[1.2ch]">
           <span class="block relative">
             e
-            <!-- CHANGED: w-24, -top-20, object-contain. No fixed height. -->
             <img
               src="/gray-bee.png"
               alt="Bee"
@@ -157,22 +162,32 @@ const query = ref({
   citation_min: '',
   field_of_research: ''
 })
-const results = ref({ documents: [], trends: {}, velocity: {} })
+
+// NEW: Added citation_warning to results
+const results = ref({ documents: [], trends: {}, velocity: {}, error: null, citation_warning: '' })
+
 const searched = ref(false)
 const loading = ref(false)
 let chart = null
 
 const search = async () => {
   loading.value = true
+  results.value.citation_warning = '' // Clear previous warning
+
+  // NEW: Set citation warning for patents with citation min set
+  if (query.value.doc_type === 'patent' && query.value.citation_min !== '' && parseFloat(query.value.citation_min) > 0) {
+    results.value.citation_warning = 'Citations for patents are not valid and may show no results. If needed, use "0" in citations to see results.'
+  }
+
   try {
     if (!query.value.text) {
       searched.value = true
-      results.value = { documents: [], trends: {}, velocity: {} }
+      results.value = { documents: [], trends: {}, velocity: {}, error: null, citation_warning: results.value.citation_warning }
       renderHeatmap()
       loading.value = false
       return
     }
-    results.value = { documents: [], trends: {}, velocity: {} }
+    results.value = { documents: [], trends: {}, velocity: {}, error: null, citation_warning: results.value.citation_warning }
     searched.value = false
 
     const safeQuery = {
@@ -191,13 +206,13 @@ const search = async () => {
       body: JSON.stringify(safeQuery)
     })
     if (!response.ok) throw new Error(`API request failed: ${response.status}`)
-    results.value = await response.json()
+    results.value = { ...await response.json(), citation_warning: results.value.citation_warning }
     searched.value = true
     await nextTick()
     renderHeatmap()
   } catch (error) {
     searched.value = true
-    results.value = { documents: [], trends: {}, velocity: {}, error: error.message }
+    results.value = { documents: [], trends: {}, velocity: {}, error: error.message, citation_warning: results.value.citation_warning }
     renderHeatmap()
   } finally {
     loading.value = false
@@ -298,7 +313,6 @@ watch(() => results.value.trends, () => {
   overflow: hidden;
 }
 
-/* Smooth bee bounce animation */
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(0px);}
   50% { transform: translateY(-12px);}
