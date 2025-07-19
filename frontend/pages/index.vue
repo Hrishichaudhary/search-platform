@@ -56,7 +56,7 @@
             e
             <!-- CHANGED: w-24, -top-20, object-contain. No fixed height. -->
             <img
-              src="/gray-bee.PNG"
+              src="/gray-bee.png"
               alt="Bee"
               class="absolute left-1/2 -top-5 object-contain grayscale drop-shadow animate-bounce-slow"
               style="width: 500px; transform: translateX(-50%);"
@@ -64,7 +64,7 @@
           </span>
         </span>
       </h2>
-      <p class="text-xl font-medium mb-4">Welcome to GrayB’s semantic document explorer</p>
+      <p class="text-xl font-medium mb-4">Welcome to Gray Bee's semantic document explorer</p>
       <span class="rounded-full px-4 py-2 bg-gray-100 text-gray-700 font-semibold shadow">
         Start searching to explore knowledge!
       </span>
