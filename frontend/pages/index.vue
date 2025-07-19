@@ -43,6 +43,33 @@
       </form>
     </div>
 
+    <!-- Gray Bee branding section (only when blank, not searching, no error) -->
+    <div
+      v-if="(!Array.isArray(results.documents) || !results.documents.length) && !loading && !results.error"
+      class="flex flex-col items-center justify-center py-14 text-gray-500"
+    >
+      <!-- Big Bee above last 'e', resized proportionally -->
+      <h2 class="text-5xl font-extrabold mb-2 tracking-tight flex justify-center items-end" style="color:#7b7b7c">
+        Gray Be
+        <span class="inline-block relative w-[1.2ch]">
+          <span class="block relative">
+            e
+            <!-- CHANGED: w-24, -top-20, object-contain. No fixed height. -->
+            <img
+              src="/gray-bee.PNG"
+              alt="Bee"
+              class="absolute left-1/2 -top-5 object-contain grayscale drop-shadow animate-bounce-slow"
+              style="width: 500px; transform: translateX(-50%);"
+            >
+          </span>
+        </span>
+      </h2>
+      <p class="text-xl font-medium mb-4">Welcome to GrayB’s semantic document explorer</p>
+      <span class="rounded-full px-4 py-2 bg-gray-100 text-gray-700 font-semibold shadow">
+        Start searching to explore knowledge!
+      </span>
+    </div>
+
     <!-- Loading Spinner -->
     <div v-if="loading" class="flex flex-col items-center my-8">
       <span class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-2"></span>
@@ -269,5 +296,14 @@ watch(() => results.value.trends, () => {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;  
   overflow: hidden;
+}
+
+/* Smooth bee bounce animation */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0px);}
+  50% { transform: translateY(-12px);}
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2.8s infinite;
 }
 </style>
