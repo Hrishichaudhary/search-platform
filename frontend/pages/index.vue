@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-6">
-    <h1 class="text-4xl font-bold mb-6 text-center text-blue-800">Search Patents or Papers</h1>
+    <h1 class="text-4xl font-bold mb-6 text-center text-blue-800">RAG-powered research search engine</h1>
     
     <!-- Search Bar and Filters -->
     <div class="mb-6 bg-gray-100 p-4 rounded-lg shadow">
@@ -140,7 +140,9 @@
     <div v-if="results.trends && Object.keys(results.trends).length && !loading" class="mb-6">
       <h2 class="text-2xl font-semibold mb-4">Sub-topic Trends</h2>
       <div class="bg-white rounded-xl p-4 shadow">
-        <canvas id="heatmap" style="width:100%;min-height:350px;max-height:500px;"></canvas>
+        <div style="height:400px">
+          <canvas id="heatmap"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -150,7 +152,9 @@
 import { ref, nextTick, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { MatrixController, MatrixElement } from 'chartjs-chart-matrix'
-Chart.register(...registerables, MatrixController, MatrixElement)
+
+Chart.register(...registerables)
+Chart.register(MatrixController, MatrixElement)
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/search'
 
