@@ -80,36 +80,36 @@ This allows the system to **combine semantic search with generative AI**, provid
 
 # 📁 Project Structure
 
-search-platform/
-│
-├── backend/
-│ ├── app/
-│ │ ├── main.py
-│ │ ├── data_ingestion.py
-│ │ ├── fetch_openalex.py
-│ │ ├── rag_service.py
-│ │ ├── reranker.py
-│ │ └── models/
-│ │
-│ ├── data/
-│ │ ├── raw/
-│ │ │ ├── papers.csv
-│ │ │ └── patents.csv
-│ │
-│ ├── requirements.txt
-│ └── docker-compose.yml
-│
-├── frontend/
-│ ├── pages/
-│ ├── components/
-│ ├── assets/
-│ ├── package.json
-│ └── nuxt.config.ts
-│
-├── docs/
-│ └── screenshots/
-│
-└── README.md
+  search-platform/
+  │
+  ├── backend/
+  │ ├── app/
+  │ │ ├── main.py
+  │ │ ├── data_ingestion.py
+  │ │ ├── fetch_openalex.py
+  │ │ ├── rag_service.py
+  │ │ ├── reranker.py
+  │ │ └── models/
+  │ │
+  │ ├── data/
+  │ │ ├── raw/
+  │ │ │ ├── papers.csv
+  │ │ │ └── patents.csv
+  │ │
+  │ ├── requirements.txt
+  │ └── docker-compose.yml
+  │
+  ├── frontend/
+  │ ├── pages/
+  │ ├── components/
+  │ ├── assets/
+  │ ├── package.json
+  │ └── nuxt.config.ts
+  │
+  ├── docs/
+  │ └── screenshots/
+  │
+  └── README.md
 
 ---
 
