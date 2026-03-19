@@ -80,7 +80,8 @@ This allows the system to **combine semantic search with generative AI**, provid
 
 # 📁 Project Structure
 
-```search-platform/
+```
+search-platform/
 │
 ├── backend/
 │ ├── app/
