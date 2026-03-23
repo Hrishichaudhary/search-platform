@@ -46,7 +46,7 @@ The platform supports:
 The system integrates **Retrieval Augmented Generation (RAG)** to generate summaries from retrieved research papers.
 
 Workflow:
-
+```
 User Query
 ↓
 Sentence Transformer Embedding
@@ -60,7 +60,7 @@ Context Construction
 Local LLM (Ollama)
 ↓
 AI Generated Research Summary
-
+```
 
 This allows the system to **combine semantic search with generative AI**, providing users with **interpretable summaries of research results**.
 
