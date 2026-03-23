@@ -45,6 +45,10 @@ The platform supports:
 
 The system integrates **Retrieval Augmented Generation (RAG)** to generate summaries from retrieved research papers.
 
+System Architecture:
+```
+User → Text Embedding (Sentence Transformers) → Milvus Vector DB → Top-K Retrieval → Clustering & Filtering → RAG (LLM) → Frontend UI
+```
 Workflow:
 ```
 User Query
@@ -134,32 +138,30 @@ search-platform/
 
 ## 1️⃣ Backend Setup
 
-Create a virtual environment:
-    cd backend
-    python -m venv venv
+#### Create a virtual environment:
+      cd backend
+      python -m venv venv
 
-Activate environment
+#### Activate environment
 
-Windows:
-    venv\Scripts\activate
+##### Windows:
+      venv\Scripts\activate
 
-Install dependencies:
-    pip install -r requirements.txt
+##### Install dependencies:
+      pip install -r requirements.txt
 
 ---
 
-## Start Milvus + MinIO
+#### Start Milvus + MinIO
 
-Requires Docker:
+### Requires Docker:
     docker-compose up -d
 
 ---
 
 ## Data Ingestion
-
-cd app
-python data_ingestion.py
-
+    cd app
+    python data_ingestion.py
 
 This will:
 
@@ -169,26 +171,20 @@ This will:
 
 ---
 
-## Start Backend API
+#### Start Backend API
+    uvicorn main:app --reload
 
-uvicorn main:app --reload
-
-Backend runs on:
-
+#### Backend runs on:
     http://localhost:8000
-
-
 ---
 
-# 2️⃣ Frontend Setup
-
+## 2️⃣ Frontend Setup
     cd frontend
     npm install
     npm run dev
 
-Open:
+## Open:
     http://localhost:3000
-
 ---
 
 # 🚀 Deployment
@@ -200,11 +196,8 @@ Open:
 | Vector DB | Docker (Milvus) |
 | LLM | Ollama (local) |
 
-Frontend demo:
-
+## Frontend demo:
     https://search-platform-five.vercel.app/
-
-
 ---
 
 # 🔎 Example Queries
@@ -257,7 +250,6 @@ Nuxt.js and Tailwind CSS were used to create a **responsive and modern UI**.
 # ⚖️ Assumptions, Challenges, and Trade-offs
 
 ### Challenges
-
 - Large dataset preprocessing
 - Vector indexing performance
 - Docker networking issues
@@ -296,22 +288,19 @@ Currently the backend runs locally. To enable full functionality externally, use
 
 # 📚 Notes
 
-Embedding model used:
+# Embedding model used:
     all-MiniLM-L6-v2
-
 
 The system can easily be extended with:
 
 - OpenAI embeddings
 - larger LLMs
 - advanced reranking models
-
 ---
 
 # 🏃 Running Locally
 
 Clone the repository and follow the **Setup** instructions.
-
 ---
 
 # 👤 Contact
@@ -321,7 +310,6 @@ Email:
 
 
 For questions or contributions please open an issue or pull request.
-
 ---
 
 **Happy researching! 🚀**
