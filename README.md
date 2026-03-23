@@ -53,17 +53,21 @@ Workflow:
 ```
 User Query
 ↓
-Sentence Transformer Embedding
+Text Embedding (Sentence Transformers)
 ↓
-Milvus Vector Search
+Vector Search (Milvus)
 ↓
-Top-K Relevant Documents
+Top-K Document Retrieval
 ↓
-Context Construction
+Clustering (KMeans) for Sub-topic Discovery
 ↓
-Local LLM (Ollama)
+Filtering & Metadata Enrichment
 ↓
-AI Generated Research Summary
+Trend Analysis (Time-based Insights)
+↓
+RAG (LLM-based Contextual Summary)
+↓
+Frontend Display (FastAPI + Nuxt.js)
 ```
 
 This allows the system to **combine semantic search with generative AI**, providing users with **interpretable summaries of research results**.
