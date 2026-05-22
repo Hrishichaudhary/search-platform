@@ -48,8 +48,8 @@ sympy==1.14.0
 tbb==2021.13.1
 threadpoolctl==3.6.0
 tokenizers==0.13.3
-torch==2.3.1
-torchvision==0.18.1
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu
 tqdm==4.67.3
 transformers==4.30.2
 typing-inspection==0.4.2

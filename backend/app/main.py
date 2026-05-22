@@ -1,255 +1,446 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
 from sentence_transformers import SentenceTransformer
-from pymilvus import Collection, utility, connections, list_collections
-from sklearn.cluster import KMeans
+
+from pymilvus import (
+    Collection,
+    utility,
+    connections,
+    list_collections
+)
+
 from collections import defaultdict
 from typing import List, Optional
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
-import sys
 
 from app.rag_service import generate_rag_summary
 from app.reranker import rerank_documents
 
-# --- FastAPI setup ---
+import traceback
+import sys
+
+
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
-# --- Define Query model ---
+
 class Query(BaseModel):
+
     text: str
     doc_type: Optional[str] = None
     date_range: Optional[List[str]] = None
-    citation_min: Optional[int] = None
+    citation_min: Optional[int] = 0
     field_of_research: Optional[str] = None
 
 
-# --- Milvus connection ---
 try:
-    connections.connect(host="localhost", port="19530")
-except Exception as e:
-    print(f"Failed to connect to Milvus: {str(e)}", file=sys.stderr)
+
+    connections.connect(
+        alias="default",
+        host="localhost",
+        port="19530"
+    )
+
+    print("MILVUS CONNECTED")
+
+except Exception:
+
+    traceback.print_exc()
     sys.exit(1)
 
-if not utility.has_collection("documents"):
-    print("Collection 'documents' not found. Run data_ingestion.py first.", file=sys.stderr)
+
+print(
+    "Collections:",
+    utility.list_collections()
+)
+
+
+if not utility.has_collection(
+    "documents"
+):
+
+    print(
+        "documents collection missing"
+    )
+
     sys.exit(1)
 
-collection = Collection("documents")
+
+print(
+    "Loading collection..."
+)
+
+collection = Collection(
+    "documents"
+)
+
 collection.load()
 
-# --- Embedding model ---
-model = SentenceTransformer("all-MiniLM-L6-v2")
+print(
+    "Collection loaded"
+)
 
 
-# --- Subtopic name generator ---
-def generate_subtopic_names(documents, labels, n_clusters):
-    tfidf = TfidfVectorizer(max_features=3, stop_words="english")
-    clusters = [[] for _ in range(n_clusters)]
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
 
-    for doc, label in zip(documents, labels):
-        clusters[label].append(doc["abstract"] or "")
+
+def generate_subtopic_names(
+    documents,
+    labels,
+    n_clusters
+):
+
+    tfidf = TfidfVectorizer(
+        max_features=3,
+        stop_words="english"
+    )
+
+    clusters = [
+
+        []
+
+        for _ in range(
+            n_clusters
+        )
+
+    ]
+
+    for doc, label in zip(
+        documents,
+        labels
+    ):
+
+        clusters[label].append(
+
+            doc.get(
+                "abstract",
+                ""
+            )
+
+        )
 
     names = []
+
     for cluster in clusters:
-        if not cluster or all(not x for x in cluster):
-            names.append("Miscellaneous")
+
+        if not cluster:
+
+            names.append(
+                "Miscellaneous"
+            )
+
             continue
+
         try:
-            tfidf_matrix = tfidf.fit_transform(cluster)
-            feature_names = tfidf.get_feature_names_out()
-            names.append(" ".join(feature_names[:2]))
-        except Exception:
-            names.append("Miscellaneous")
+
+            tfidf.fit_transform(
+                cluster
+            )
+
+            names.append(
+
+                " ".join(
+                    tfidf.get_feature_names_out()[:2]
+                )
+
+            )
+
+        except:
+
+            names.append(
+                "Miscellaneous"
+            )
 
     return names
 
 
-# --- Debug endpoint ---
+@app.get("/")
+def root():
+
+    return {
+
+        "message":
+        "Backend running"
+
+    }
+
+
+@app.get("/ping")
+def ping():
+
+    print(
+        "PING HIT"
+    )
+
+    return {
+
+        "status":
+        "alive"
+
+    }
+
+
 @app.get("/list_collections")
-def list_collections_endpoint():
-    try:
-        collections = list_collections()
-        return {"collections": collections}
-    except Exception as e:
-        return {"error": str(e)}
+def collections_api():
+
+    return {
+
+        "collections":
+        list_collections()
+
+    }
 
 
-# --- Search endpoint ---
+@app.post("/test")
+async def test():
+
+    print(
+        "TEST HIT"
+    )
+
+    return {
+
+        "ok": True
+
+    }
+
+
 @app.post("/search")
-async def search(query: Query):
+async def search(
+    query: Query
+):
 
     try:
-        query_vector = model.encode([query.text])[0]
+
+        print("SEARCH HIT START")
+        print(query)
+
+        print("ENCODING")
+
+        query_vector = model.encode(
+            [query.text]
+        )[0]
+
+        print("ENCODING DONE")
 
         expr_parts = []
 
-        if query.doc_type and query.doc_type != "both":
-            expr_parts.append(f"doc_type == '{query.doc_type}'")
-
         if (
-            query.date_range
-            and isinstance(query.date_range, list)
-            and len(query.date_range) == 2
-            and query.date_range[0]
-            and query.date_range[1]
+            query.doc_type
+            and query.doc_type != ""
+            and query.doc_type != "both"
         ):
+
             expr_parts.append(
-                f"pub_date >= '{query.date_range[0]}' and pub_date <= '{query.date_range[1]}'"
+                f"doc_type == '{query.doc_type}'"
             )
 
-        if query.citation_min is not None:
-            try:
-                citation_min = int(query.citation_min)
-                if citation_min > 0:
-                    expr_parts.append(f"citation_count >= {citation_min}")
-            except Exception:
-                pass
+        if query.citation_min:
 
-        if query.field_of_research:
+            expr_parts.append(
+                f"citation_count >= {query.citation_min}"
+            )
+
+        if (
+            query.field_of_research
+            and query.field_of_research != ""
+        ):
+
             expr_parts.append(
                 f"field_of_research like '%{query.field_of_research}%'"
             )
 
-        expr = " and ".join(expr_parts) if expr_parts else None
+        expr = None
 
-        search_params = {"metric_type": "L2", "params": {"nprobe": 10}}
+        if expr_parts:
+
+            expr = " and ".join(
+                expr_parts
+            )
+
+        print("MILVUS SEARCH")
 
         results = collection.search(
+
             data=[query_vector],
+
             anns_field="vector",
-            param=search_params,
+
+            param={
+
+                "metric_type": "L2",
+
+                "params": {
+
+                    "nprobe": 10
+
+                }
+
+            },
+
             limit=10,
+
             expr=expr,
+
             output_fields=[
-                "id",
+
                 "title",
+
                 "abstract",
+
                 "doc_type",
+
                 "pub_date",
+
                 "citation_count",
+
                 "field_of_research",
-                "vector",
-            ],
+
+                "sub_topic"
+
+            ]
+
         )
 
-    except Exception as e:
-        return {"documents": [], "trends": {}, "velocity": {}, "error": str(e)}
+        print("MILVUS DONE")
 
-    documents = []
-    vectors = []
+        documents = []
 
-    for hit in results[0]:
+        for hit in results[0]:
 
-        entity = hit.entity
+            entity = hit.entity
 
-        doc = {
-            "id": entity.get("id"),
-            "title": entity.get("title") or "Untitled",
-            "abstract": entity.get("abstract") or "",
-            "doc_type": entity.get("doc_type"),
-            "pub_date": entity.get("pub_date"),
-            "citation_count": entity.get("citation_count") or 0,
-            "field_of_research": entity.get("field_of_research") or "",
-        }
+            documents.append({
 
-        vector = entity.get("vector") if "vector" in entity else getattr(entity, "vector", None)
+                "id":
+                str(hit.id),
 
-        if vector is not None:
-            vectors.append(vector)
-        else:
-            vectors.append([0.0] * len(query_vector))
+                "title":
+                entity.get("title")
+                or "Untitled",
 
-        documents.append(doc)
+                "abstract":
+                entity.get("abstract")
+                or "",
 
-    if not documents:
-        return {
-            "documents": [],
-            "trends": {},
-            "velocity": {},
-            "error": "No results found.",
-        }
+                "doc_type":
+                entity.get("doc_type")
+                or "unknown",
 
-    # --- Apply CrossEncoder reranking ---
-    documents = rerank_documents(query.text, documents)
+                "pub_date":
+                entity.get("pub_date")
+                or "Unknown",
 
-    # --- Clustering ---
-    sub_topics = []
+                "citation_count":
+                entity.get("citation_count")
+                or 0,
 
-    if vectors and len(vectors) > 1 and all(np.all(np.isfinite(v)) for v in vectors):
+                "field_of_research":
+                entity.get(
+                    "field_of_research"
+                )
+                or "",
 
-        n_clusters = min(5, len(vectors))
+                "sub_topic":
+                entity.get(
+                    "sub_topic"
+                )
+                or "General"
 
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+            })
 
-        vectors_array = np.array(vectors)
+        print(
+            "DOCS FOUND:",
+            len(documents)
+        )
 
-        labels = kmeans.fit_predict(vectors_array)
+        documents = rerank_documents(
 
-        sub_topic_names = generate_subtopic_names(documents, labels, n_clusters)
+            query.text,
+            documents
 
-        for i, doc in enumerate(documents):
-            doc["sub_topic"] = sub_topic_names[labels[i]]
-            sub_topics.append(sub_topic_names[labels[i]])
+        )
 
-    else:
+        summary = generate_rag_summary(
+
+            query.text,
+            documents
+
+        )
+
+        trends = defaultdict(
+            lambda: defaultdict(int)
+        )
 
         for doc in documents:
-            doc["sub_topic"] = "Miscellaneous"
 
-    # --- Trend calculation ---
-    trends = defaultdict(lambda: defaultdict(int))
+            topic = doc.get(
+                "sub_topic",
+                "General"
+            )
 
-    for doc in documents:
-        year = str(doc["pub_date"])[:4]
-        trends[doc["sub_topic"]][year] += 1
+            year = str(
 
-    velocity = {}
+                doc.get(
+                    "pub_date",
+                    ""
+                )
 
-    for topic in trends:
+            )[:4]
 
-        topic_years = []
+            if year:
 
-        years_counts = {}
+                trends[
+                    topic
+                ][
+                    year
+                ] += 1
 
-        for date_str, count in trends[topic].items():
+        trends = {
 
-            try:
-                year = str(date_str)[:4]
+            topic:
 
-                if year.isdigit():
-                    years_counts[year] = years_counts.get(year, 0) + count
+            dict(years)
 
-            except Exception:
-                continue
+            for topic, years
 
-        for year in sorted(years_counts):
+            in trends.items()
 
-            count = years_counts[year]
+        }
 
-            prev_year = str(int(year) - 1)
+        return {
 
-            prev_count = years_counts.get(prev_year, 0)
+            "documents":
+            documents,
 
-            topic_years.append((year, count, count - prev_count))
+            "trends":
+            trends,
 
-        velocity[topic] = topic_years
+            "velocity": {},
 
-    # --- RAG summary ---
-    rag_summary = generate_rag_summary(query.text, documents)
+            "ai_summary":
+            summary
 
-    return {
-        "documents": documents,
-        "trends": dict(trends),
-        "velocity": velocity,
-        "ai_summary": rag_summary,
-    }
+        }
+
+    except Exception:
+
+        print(
+            "SEARCH FAILED"
+        )
+
+        traceback.print_exc()
+
+        raise

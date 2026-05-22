@@ -1,4 +1,4 @@
-# 🚀 Semantic Search & RAG Research Platform
+# 🚀 AI-Powered Semantic Search & Research Analytics Platform
 
 ## 📝 Project Overview
 
@@ -32,12 +32,13 @@ Developed using:
 
 The platform supports:
 
-- 🔍 **Semantic search** using vector embeddings
-- 🧠 **Document clustering** into research sub-topics
-- 📈 **Trend analysis** across research areas
-- 🏷️ **Filtering** by document type, citations, and date
-- 🤖 **AI generated research summaries (RAG)**
-- ⚡ **Fast similarity search using Milvus vector database**
+- 🔍 Semantic search using vector embeddings
+- 🧠 Automatic sub-topic generation and clustering
+- 📈 Research trend analytics with sub-topic heatmaps
+- 🏷️ Metadata filtering (document type, citations, publication year, field)
+- 🤖 Retrieval Augmented Generation (RAG) summaries using a local LLM
+- ⚡ High-speed similarity search using Milvus vector database
+- 🆔 Metadata enrichment with document IDs and research categorization
 
 ---
 
@@ -46,9 +47,29 @@ The platform supports:
 The system integrates **Retrieval Augmented Generation (RAG)** to generate summaries from retrieved research papers.
 
 System Architecture:
+
+```text
+User
+↓
+Text Embedding (Sentence Transformers)
+↓
+Milvus Vector Database
+↓
+Top-K Retrieval
+↓
+Metadata Filtering
+↓
+Sub-topic Discovery
+↓
+Trend Analytics
+↓
+Reranking Pipeline
+↓
+RAG (LLM)
+↓
+Frontend UI
 ```
-User → Text Embedding (Sentence Transformers) → Milvus Vector DB → Top-K Retrieval → Clustering & Filtering → RAG (LLM) → Frontend UI
-```
+
 Workflow:
 ```
 User Query
@@ -59,7 +80,15 @@ Vector Search (Milvus)
 ↓
 Top-K Document Retrieval
 ↓
-Clustering (KMeans) for Sub-topic Discovery
+Metadata Filtering
+↓
+Sub-topic Discovery
+↓
+Trend Analytics Generation
+↓
+Reranking Pipeline
+↓
+Context Construction
 ↓
 Filtering & Metadata Enrichment
 ↓
@@ -79,7 +108,7 @@ This allows the system to **combine semantic search with generative AI**, provid
 | Layer | Tools |
 |------|------|
 | Backend | FastAPI, Milvus, Sentence Transformers, Ollama |
-| AI/ML | all-MiniLM-L6-v2, Scikit-learn, KMeans |
+| AI/ML | all-MiniLM-L6-v2, Sentence Transformers, Scikit-learn |
 | Frontend | Nuxt.js, Vue 3, Tailwind CSS, Chart.js |
 | Data | OpenAlex API, Patent datasets |
 | Infrastructure | Docker, MinIO |
@@ -88,36 +117,28 @@ This allows the system to **combine semantic search with generative AI**, provid
 
 # 📁 Project Structure
 
-```
+```text
 search-platform/
 │
 ├── backend/
-│ ├── app/
-│ │ ├── main.py
-│ │ ├── data_ingestion.py
-│ │ ├── fetch_openalex.py
-│ │ ├── rag_service.py
-│ │ ├── reranker.py
-│ │ └── models/
-│ │
-│ ├── data/
-│ │ ├── raw/
-│ │ │ ├── papers.csv
-│ │ │ └── patents.csv
-│ │
-│ ├── requirements.txt
-│ └── docker-compose.yml
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── data_ingestion.py
+│   │   ├── fetch_openalex.py
+│   │   ├── rag_service.py
+│   │   ├── reranker.py
+│   │
+│   ├── Dockerfile
+│   ├── .dockerignore
 │
 ├── frontend/
-│ ├── pages/
-│ ├── components/
-│ ├── assets/
-│ ├── package.json
-│ └── nuxt.config.ts
+│   ├── pages/
+│   ├── components/
+│   ├── Dockerfile
 │
+├── docker-compose.yml
+├── requirements.txt
 ├── docs/
-│ └── screenshots/
-│
 └── README.md
 ```
 ---
@@ -126,8 +147,11 @@ search-platform/
 
 - 🔍 **Semantic search** across patents and research papers
 - 🤖 **RAG-based AI summaries** generated using a local LLM
-- 🧠 **Automatic topic clustering** using KMeans
-- 📈 **Trend visualization** of research areas
+- 🧠 Automatic research sub-topic generation
+- 📈 Research trend visualization using sub-topic heatmaps
+- 🔄 Reranking pipeline for improved retrieval quality
+- 🆔 Stable document IDs with metadata enrichment
+- 📊 Temporal research analytics across publication timelines
 - 🏷️ **Advanced filtering** by:
   - document type
   - publication year
@@ -225,8 +249,10 @@ The backend handles:
 - data ingestion
 - embedding generation
 - vector similarity search
-- document filtering
-- clustering
+- metadata filtering
+- reranking pipeline
+- sub-topic generation
+- trend analytics generation
 - RAG summarization
 
 Milvus enables **semantic similarity search**, allowing the system to retrieve documents based on **meaning rather than keyword matching**.
@@ -241,11 +267,12 @@ The frontend focuses on **usability and exploration**.
 
 Features include:
 
-- interactive search interface
-- filtering options
+- interactive semantic search
+- metadata filters
 - document cards
-- topic clustering
-- research trend visualizations
+- AI generated summaries
+- sub-topic trend heatmaps
+- research analytics visualization
 
 Nuxt.js and Tailwind CSS were used to create a **responsive and modern UI**.
 
@@ -258,6 +285,8 @@ Nuxt.js and Tailwind CSS were used to create a **responsive and modern UI**.
 - Vector indexing performance
 - Docker networking issues
 - Handling sparse metadata in patents
+- Frontend ↔ Backend synchronization
+- Vector schema evolution and metadata propagation
 
 ### Trade-offs
 
@@ -267,14 +296,19 @@ Nuxt.js and Tailwind CSS were used to create a **responsive and modern UI**.
 ### What Worked Well
 
 - Milvus vector search performance
-- RAG summaries using local LLM
-- Interactive UI with Nuxt.js
+- Local RAG summarization pipeline
+- Sub-topic analytics generation
+- Interactive research trend heatmap analytics
+- Metadata filtering + reranking pipeline
+- Interactive Nuxt.js UI
 
 ### What Could Be Improved
 
 - Public backend deployment
 - Larger dataset ingestion
-- advanced reranking models
+- Advanced reranking models
+- Research velocity analytics
+- Hybrid retrieval (semantic + keyword search)
 
 ---
 

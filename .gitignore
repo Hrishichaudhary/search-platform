@@ -8,6 +8,7 @@ dist
 
 # Node dependencies
 node_modules
+frontend/node_modules/
 
 # Logs
 logs
@@ -23,18 +24,37 @@ logs
 .env.*
 !.env.example
 
-# Backend volumes and data (Milvus, MinIO, etc.)
+# Backend volumes and generated data
 backend/volumes/
+volumes/
+
+# Raw datasets (keep out of Git)
 backend/data/raw/
 *.csv
 *.tsv
 *.zip
 
-# Python cache and venv
+# Python
 __pycache__/
 *.pyc
-backend/venv/
+*.pyo
+*.pyd
+*.sqlite3
 
-# Node modules and build output (if you have a frontend folder)
-frontend/node_modules/
+# Virtual environments
+venv/
+backend/venv/
+.venv/
+
+# Frontend build output
 frontend/dist/
+
+# Milvus / MinIO local artifacts
+etcd-data/
+minio-data/
+
+# OS junk
+Thumbs.db
+
+venv/
+.venv/
